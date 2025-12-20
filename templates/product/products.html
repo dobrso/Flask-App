@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Swaga Shop
+{% endblock %}
+
+{% block content %}
+    SWAGA SHOP
+    {% if products %}
+        {% for product in products %}
+            {{ product.title }}
+            <button type="button">
+                <a href="{{ url_for('productBP.detailProduct', id=product.id) }}">Подробнее</a>
+            </button>
+            {% if userID and product.user_id == userID %}
+                <button type="button">
+                    <a href="{{ url_for('productBP.editProduct', id=product.id) }}">Изменить</a>
+                </button>
+                <button type="button">
+                    <a href="{{ url_for('productBP.deleteProduct', id=product.id) }}">Удалить</a>
+                </button>
+            {% endif %}
+        {% endfor %}
+    {% else %}
+        Нет объявлений
+    {% endif %}
+{% endblock %}

@@ -22,7 +22,7 @@ def registration():
         if status:
             session["user_id"] = userID
             flash(message, "success")
-            return redirect(url_for("home"))
+            return redirect(url_for("productBP.products"))
 
         flash(message, "danger")
         return render_template("registration.html")
@@ -40,7 +40,7 @@ def login():
         if status:
             session["user_id"] = userID
             flash(message, "success")
-            return redirect(url_for("home"))
+            return redirect(url_for("productBP.products"))
 
         flash(message, "danger")
         return render_template("login.html")
@@ -52,4 +52,4 @@ def logout():
     if "user_id" in session:
         session.pop("user_id")
 
-    return redirect(url_for("home"))
+    return redirect(url_for("productBP.products"))

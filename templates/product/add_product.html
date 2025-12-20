@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Создать объявление
+{% endblock %}
+
+{% block content %}
+    Объявление
+    <form method="post">
+        <input name="title" type="text" required>
+        <textarea name="description" required></textarea>
+        <input name="price" type="number" required>
+        <button type="submit">
+            Создать
+        </button>
+    </form>
+{% endblock %}
