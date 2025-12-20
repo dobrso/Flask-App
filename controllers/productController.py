@@ -36,10 +36,18 @@ def detailProduct(id):
 
 @productBP.route("/product/edit/<int:id>", methods=["GET", "POST"])
 def editProduct(id):
-    if request.method == "POST":
-        pass
+    product = productService.getProductById(id)
 
-    return render_template("product/edit_product.html")
+    if request.method == "POST":
+        title = request.form["title"].strip()
+        description = request.form["description"].strip()
+        price = request.form["price"]
+
+        productService.updateProduct(product.id, title, description, price)
+
+        return redirect(url_for("productBP.products"))
+
+    return render_template("product/edit_product.html", product=product)
 
 @productBP.route("/product/delete/<int:id>")
 def deleteProduct(id):

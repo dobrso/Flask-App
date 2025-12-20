@@ -23,5 +23,5 @@ CREATE TABLE IF NOT EXISTS products (
 CREATE TABLE IF NOT EXISTS profiles (
     id SERIAL PRIMARY KEY,
     phone_number VARCHAR(100),
-    bio VARCHAR(100),
+    bio VARCHAR(100)
 );

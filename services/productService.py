@@ -16,5 +16,8 @@ class ProductService:
     def addProduct(self, title, description, price, userID):
         self.productRepository.create(title, description, price, userID)
 
+    def updateProduct(self, id, title, description, price):
+        self.productRepository.updateById(id, title, description, price)
+
     def deleteProduct(self, id):
         self.productRepository.deleteById(id)

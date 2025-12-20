@@ -5,4 +5,13 @@
 {% endblock %}
 
 {% block content %}
+    Редактирование {{ product.title }}
+    <form method="post">
+        <input name="title" type="text" value="{{ product.title }}">
+        <textarea name="description" >{{ product.description }}</textarea>
+        <input name="price" type="number" value="{{ product.price }}">
+        <button type="submit">
+            Изменить
+        </button>
+    </form>
 {% endblock %}

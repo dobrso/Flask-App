@@ -65,6 +65,24 @@ class ProductRepository:
 
             return Product(*row)
 
+    def updateById(self, id, name, description, price):
+        connection = self.database.getConnection()
+        if connection:
+            cursor = connection.cursor()
+            query = '''
+            UPDATE products
+            SET name = %s, description = %s, price = %s
+            WHERE id = %s
+            '''
+
+            try:
+                cursor.execute(query, (name, description, price, id))
+                connection.commit()
+
+            finally:
+                cursor.close()
+                connection.close()
+
     def deleteById(self, id):
         connection = self.database.getConnection()
         if connection:
