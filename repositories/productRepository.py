@@ -6,17 +6,17 @@ class ProductRepository:
     def __init__(self):
         self.database = Database()
 
-    def create(self, name, description, price, user_id):
+    def create(self, name, description, price, user_id, image=None):
         connection = self.database.getConnection()
         if connection:
             cursor = connection.cursor()
             query = '''
-            INSERT INTO products (name, description, price, user_id)
-            VALUES (%s, %s, %s, %s)
+            INSERT INTO products (name, description, price, user_id, image)
+            VALUES (%s, %s, %s, %s, %s)
             '''
 
             try:
-                cursor.execute(query, (name, description, price, user_id))
+                cursor.execute(query, (name, description, price, user_id, image))
                 connection.commit()
 
             finally:
@@ -65,18 +65,28 @@ class ProductRepository:
 
             return Product(*row)
 
-    def updateById(self, id, name, description, price):
+    def updateById(self, id, name, description, price, image=None):
         connection = self.database.getConnection()
         if connection:
             cursor = connection.cursor()
-            query = '''
-            UPDATE products
-            SET name = %s, description = %s, price = %s
-            WHERE id = %s
-            '''
 
             try:
-                cursor.execute(query, (name, description, price, id))
+                if image:
+                    query = '''
+                    UPDATE products
+                    SET name = %s, description = %s, price = %s, image = %s
+                    WHERE id = %s
+                    '''
+                    cursor.execute(query, (name, description, price, image, id))
+
+                else:
+                    query = '''
+                    UPDATE products
+                    SET name = %s, description = %s, price = %s
+                    WHERE id = %s
+                    '''
+                    cursor.execute(query, (name, description, price, id))
+
                 connection.commit()
 
             finally:
@@ -99,3 +109,25 @@ class ProductRepository:
             finally:
                 cursor.close()
                 connection.close()
+
+    def getProductOwner(self, id):
+        connection = self.database.getConnection()
+        if connection:
+            cursor = connection.cursor()
+            query = '''
+            SELECT user_id
+            FROM products
+            WHERE id = %s
+            '''
+
+            try:
+                cursor.execute(query, (id,))
+                userID = cursor.fetchone()
+                if not userID:
+                    return None
+
+            finally:
+                cursor.close()
+                connection.close()
+
+            return userID

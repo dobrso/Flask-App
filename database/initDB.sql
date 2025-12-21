@@ -14,9 +14,9 @@ CREATE TABLE IF NOT EXISTS products (
     name VARCHAR(100) NOT NULL,
     description TEXT NOT NULL,
     price INTEGER NOT NULL,
-    image VARCHAR(100) DEFAULT '',
     user_id INTEGER NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    image VARCHAR(255),
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 

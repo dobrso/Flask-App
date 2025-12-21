@@ -6,10 +6,11 @@
 
 {% block content %}
     Объявление
-    <form method="post">
+    <form method="post" enctype="multipart/form-data">
         <input name="title" type="text" required>
         <textarea name="description" required></textarea>
         <input name="price" type="number" required>
+        <input name="image" type="file" accept="image/*">
         <button type="submit">
             Создать
         </button>

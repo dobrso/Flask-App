@@ -11,5 +11,8 @@ class Config:
     DB_PASSWORD = os.getenv("DB_PASSWORD")
     DB_HOST = os.getenv("DB_HOST")
     DB_PORT = os.getenv("DB_PORT")
+    UPLOAD_FOLDER = "static/uploads"
+    ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif"}
+    MAX_CONTENT_LENGTH = 16 * 1024 * 1024 # 16MB
     SCREAMER_CHANCE = 0.1
     SCREAMER_COOLDOWN = 60

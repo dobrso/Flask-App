@@ -13,11 +13,15 @@ class ProductService:
         product = self.productRepository.getById(id)
         return product
 
-    def addProduct(self, title, description, price, userID):
-        self.productRepository.create(title, description, price, userID)
+    def addProduct(self, title, description, price, userID, image=None):
+        self.productRepository.create(title, description, price, userID, image)
 
-    def updateProduct(self, id, title, description, price):
-        self.productRepository.updateById(id, title, description, price)
+    def updateProduct(self, id, title, description, price, image=None):
+        self.productRepository.updateById(id, title, description, price, image)
 
     def deleteProduct(self, id):
         self.productRepository.deleteById(id)
+
+    def getProductOwner(self, id):
+        userID = self.productRepository.getProductOwner(id)
+        return userID
