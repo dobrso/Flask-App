@@ -25,6 +25,10 @@ class UserService:
         user = self.userRepository.create(username, hashedPassword)
         return True, "Вы успешно зарегистрировались", user.id
 
+    def getUser(self, id):
+        user = self.userRepository.getById(id)
+        return user
+
     @staticmethod
     def validatePassword(password):
         pass

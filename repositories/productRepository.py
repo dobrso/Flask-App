@@ -122,7 +122,7 @@ class ProductRepository:
 
             try:
                 cursor.execute(query, (id,))
-                userID = cursor.fetchone()
+                userID = cursor.fetchone()[0]
                 if not userID:
                     return None
 
@@ -131,3 +131,25 @@ class ProductRepository:
                 connection.close()
 
             return userID
+
+    def getProductImage(self, id):
+        connection = self.database.getConnection()
+        if connection:
+            cursor = connection.cursor()
+            query = '''
+            SELECT image
+            FROM products
+            WHERE id = %s
+            '''
+
+            try:
+                cursor.execute(query, (id,))
+                image = cursor.fetchone()[0]
+                if not image:
+                    return None
+
+            finally:
+                cursor.close()
+                connection.close()
+
+            return image

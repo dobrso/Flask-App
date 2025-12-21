@@ -1,31 +1,13 @@
-import os
-import time
+from flask import Blueprint, render_template, request, session, url_for
+from werkzeug.utils import redirect
 
-from flask import Blueprint, render_template, request, session, url_for, current_app
-from werkzeug.utils import redirect, secure_filename
-
-from config import Config
 from services.productService import ProductService
+from services.userService import UserService
 
 productBP = Blueprint("productBP", __name__)
 
 productService = ProductService()
-
-def isFileAllowed(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in Config.ALLOWED_EXTENSIONS
-
-def saveFile(file):
-    if file and isFileAllowed(file.filename):
-        filename = secure_filename(file.filename)
-
-        name, extension = os.path.splitext(filename)
-        newFilename = f"{name}_{int(time.time())}{extension}"
-
-        uploadFolder = current_app.config['UPLOAD_FOLDER']
-        file_path = os.path.join(uploadFolder, newFilename)
-        file.save(file_path)
-        return newFilename
-    return None
+userService = UserService()
 
 @productBP.route("/")
 def products():
@@ -44,13 +26,11 @@ def addProduct():
         price = request.form.get("price")
         userID = session.get("user_id")
 
-        image = None
+        imageFile = None
         if "image" in request.files:
-            file = request.files.get("image")
-            if file.filename != "":
-                image = saveFile(file)
+            imageFile = request.files.get("image")
 
-        productService.addProduct(title, description, price, userID, image)
+        productService.addProduct(title, description, price, userID, imageFile)
         return redirect(url_for("productBP.products"))
 
     return render_template("product/add_product.html")
@@ -60,7 +40,7 @@ def detailProduct(id):
     if "user_id" not in session:
         return redirect(url_for("productBP.products"))
 
-    product = productService.getProductById(id)
+    product = productService.getProduct(id)
     return render_template("product/detail_product.html", product=product)
 
 @productBP.route("/product/edit/<int:id>", methods=["GET", "POST"])
@@ -68,7 +48,7 @@ def editProduct(id):
     if "user_id" not in session:
         return redirect(url_for("productBP.products"))
 
-    product = productService.getProductById(id)
+    product = productService.getProduct(id)
 
     if session.get("user_id") != product.user_id:
         return redirect(url_for("productBP.products"))
@@ -78,19 +58,11 @@ def editProduct(id):
         description = request.form.get("description", "").strip()
         price = request.form.get("price")
 
-        image = product.image
+        imageFile = None
         if "image" in request.files:
-            file = request.files.get("image")
-            if file.filename != "":
-                if product.image:
-                    oldImage = os.path.join(current_app.config['UPLOAD_FOLDER'], product.image)
-                    if os.path.exists(oldImage):
-                        os.remove(oldImage)
+            imageFile = request.files.get("image")
 
-                image = saveFile(file)
-
-        productService.updateProduct(product.id, title, description, price, image)
-
+        productService.updateProduct(product.id, title, description, price, imageFile, product.image)
         return redirect(url_for("productBP.products"))
 
     return render_template("product/edit_product.html", product=product)

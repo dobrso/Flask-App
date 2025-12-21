@@ -10,9 +10,9 @@ userService = UserService()
 @userBP.route("/registration", methods=["GET", "POST"])
 def registration():
     if request.method == "POST":
-        username = request.form["username"]
-        password = request.form["password"]
-        confirmPassword = request.form["confirmPassword"]
+        username = request.form.get("username").strip()
+        password = request.form.get("password").strip()
+        confirmPassword = request.form.get("confirmPassword").strip()
 
         if password != confirmPassword:
             flash("Пароли не совпадают", "danger")
@@ -27,14 +27,13 @@ def registration():
         flash(message, "danger")
         return render_template("registration.html")
 
-
     return render_template("registration.html")
 
 @userBP.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        username = request.form["username"]
-        password = request.form["password"]
+        username = request.form.get("username").strip()
+        password = request.form.get("password").strip()
 
         status, message, userID = userService.login(username, password)
         if status:

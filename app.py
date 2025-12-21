@@ -18,6 +18,10 @@ app.register_blueprint(userBP)
 app.register_blueprint(productBP)
 
 if __name__ == "__main__":
+    if os.path.exists(app.config["UPLOAD_FOLDER"]):
+        for file in os.listdir(app.config["UPLOAD_FOLDER"]):
+            os.remove(os.path.join(app.config["UPLOAD_FOLDER"], file))
+
     db = Database()
     db.initDB()
 
