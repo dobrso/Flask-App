@@ -4,16 +4,15 @@ from werkzeug.utils import redirect
 from services.productService import ProductService
 from services.userService import UserService
 
-productBP = Blueprint("productBP", __name__)
+productBP = Blueprint("product", __name__)
 
 productService = ProductService()
 userService = UserService()
 
 @productBP.route("/")
 def products():
-    userID = session.get("user_id")
     products = productService.getProducts()
-    return render_template("product/products.html", products=products, userID=userID)
+    return render_template("product/products.html", products=products)
 
 @productBP.route("/product/add", methods=["GET", "POST"])
 def addProduct():
@@ -31,14 +30,14 @@ def addProduct():
             imageFile = request.files.get("image")
 
         productService.addProduct(title, description, price, userID, imageFile)
-        return redirect(url_for("productBP.products"))
+        return redirect(url_for("product.products"))
 
     return render_template("product/add_product.html")
 
 @productBP.route("/product/<int:id>")
 def detailProduct(id):
     if "user_id" not in session:
-        return redirect(url_for("productBP.products"))
+        return redirect(url_for("product.products"))
 
     product = productService.getProduct(id)
     return render_template("product/detail_product.html", product=product)
@@ -46,12 +45,12 @@ def detailProduct(id):
 @productBP.route("/product/edit/<int:id>", methods=["GET", "POST"])
 def editProduct(id):
     if "user_id" not in session:
-        return redirect(url_for("productBP.products"))
+        return redirect(url_for("product.products"))
 
     product = productService.getProduct(id)
 
     if session.get("user_id") != product.user_id:
-        return redirect(url_for("productBP.products"))
+        return redirect(url_for("product.products"))
 
     if request.method == "POST":
         title = request.form.get("title", "").strip()
@@ -63,20 +62,20 @@ def editProduct(id):
             imageFile = request.files.get("image")
 
         productService.updateProduct(product.id, title, description, price, imageFile, product.image)
-        return redirect(url_for("productBP.products"))
+        return redirect(url_for("product.products"))
 
     return render_template("product/edit_product.html", product=product)
 
 @productBP.route("/product/delete/<int:id>")
 def deleteProduct(id):
     if "user_id" not in session:
-        return redirect(url_for("productBP.products"))
+        return redirect(url_for("product.products"))
 
     userID = productService.getProductOwner(id)
 
     if session.get("user_id") != userID:
-        return redirect(url_for("productBP.products"))
+        return redirect(url_for("product.products"))
 
     productService.deleteProduct(id)
 
-    return redirect(url_for("productBP.products"))
+    return redirect(url_for("product.products"))

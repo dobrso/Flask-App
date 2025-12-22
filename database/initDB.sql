@@ -22,6 +22,9 @@ CREATE TABLE IF NOT EXISTS products (
 
 CREATE TABLE IF NOT EXISTS profiles (
     id SERIAL PRIMARY KEY,
-    phone_number VARCHAR(100),
-    bio VARCHAR(100)
+    phone_number VARCHAR(100) NOT NULL DEFAULT '',
+    bio TEXT NOT NULL DEFAULT '',
+    user_id INTEGER UNIQUE NOT NULL,
+    image VARCHAR(255),
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );

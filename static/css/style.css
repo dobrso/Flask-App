@@ -1,0 +1,10 @@
+.a_title_btn {
+    color: #000000 !important;
+    text-decoration: none !important;
+}
+
+.image {
+    height: 200px;
+    overflow: hidden;
+    background-color: #f8f9fa;
+}

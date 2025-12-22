@@ -1,11 +1,13 @@
 from werkzeug.security import generate_password_hash, check_password_hash
 
+from repositories.profileRepository import ProfileRepository
 from repositories.userRepository import UserRepository
 
 
 class UserService:
     def __init__(self):
         self.userRepository = UserRepository()
+        self.profileRepository = ProfileRepository()
 
     def login(self, username, password):
         user = self.userRepository.getByUsername(username)
@@ -23,11 +25,16 @@ class UserService:
 
         hashedPassword = generate_password_hash(password)
         user = self.userRepository.create(username, hashedPassword)
+        self.profileRepository.create(user.id)
         return True, "Вы успешно зарегистрировались", user.id
 
     def getUser(self, id):
         user = self.userRepository.getById(id)
         return user
+
+    def getProfile(self, id):
+        profile = self.profileRepository.getProfile(id)
+        return profile
 
     @staticmethod
     def validatePassword(password):

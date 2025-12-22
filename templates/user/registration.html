@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Регистрация
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <nav class="navbar fixed-top">
+            <a href="{{ url_for('product.products') }}" class="a_title_btn navbar-brand">Swaga Shop</a>
+        </nav>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="text-center">Регистрация</h4>
+                </div>
+                <div class="card-body">
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                            {% for category, message in messages %}
+                                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+
+                    <form method="post">
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Имя пользователя</label>
+                            <input type="text"
+                                   class="form-control"
+                                   id="username"
+                                   name="username"
+                                   placeholder="Введите имя пользователя"
+                                   required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Пароль</label>
+                            <input type="password"
+                                   class="form-control"
+                                   id="password"
+                                   name="password"
+                                   placeholder="Введите пароль"
+                                   required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="confirmPassword" class="form-label">Подтвердите пароль</label>
+                            <input type="password"
+                                   class="form-control"
+                                   id="confirmPassword"
+                                   name="confirmPassword"
+                                   placeholder="Введите пароль"
+                                   required>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
+                        </div>
+                    </form>
+
+                    <hr>
+
+                    <div class="text-center">
+                        <p>Уже есть аккаунт?</p>
+                        <a href="{{ url_for('user.login') }}" class="btn btn-secondary">
+                            Войти
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
