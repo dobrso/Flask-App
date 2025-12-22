@@ -5,14 +5,64 @@
 {% endblock %}
 
 {% block content %}
-    Объявление
-    <form method="post" enctype="multipart/form-data">
-        <input name="title" type="text" required>
-        <textarea name="description" required></textarea>
-        <input name="price" type="number" required>
-        <input name="image" type="file" accept="image/*">
-        <button type="submit">
-            Создать
-        </button>
-    </form>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <nav class="navbar fixed-top">
+            <a href="{{ url_for('product.products') }}" class="a_title_btn navbar-brand">Swaga Shop</a>
+        </nav>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="text-center">Объявление</h4>
+                </div>
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Название</label>
+                            <input type="text"
+                                   class="form-control"
+                                   id="title"
+                                   name="title"
+                                   placeholder="Введите название объявления"
+                                   required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Описание</label>
+                            <textarea class="form-control"
+                                      id="description"
+                                      name="description"
+                                      placeholder="Введите описание объявления"
+                                      required></textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="price" class="form-label">Цена</label>
+                            <input type="number"
+                                   class="form-control"
+                                   id="price"
+                                   name="price"
+                                   placeholder="Введите цену"
+                                   required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="image" class="form-label">Изображение</label>
+                            <input type="file"
+                                   class="form-control"
+                                   id="image"
+                                   name="image"
+                                   accept="image/*">
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">Создать</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

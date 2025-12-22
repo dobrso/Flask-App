@@ -32,9 +32,9 @@ class UserService:
         user = self.userRepository.getById(id)
         return user
 
-    def getProfile(self, id):
-        profile = self.profileRepository.getProfile(id)
-        return profile
+    def getProfileID(self, userID):
+        id = self.profileRepository.getProfileID(userID)
+        return id
 
     @staticmethod
     def validatePassword(password):

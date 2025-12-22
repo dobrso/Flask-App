@@ -11,8 +11,10 @@ userService = UserService()
 
 @productBP.route("/")
 def products():
+    userID = session.get("user_id")
+    profileID = userService.getProfileID(userID)
     products = productService.getProducts()
-    return render_template("product/products.html", products=products)
+    return render_template("product/products.html", products=products, profileID=profileID)
 
 @productBP.route("/product/add", methods=["GET", "POST"])
 def addProduct():
@@ -36,9 +38,6 @@ def addProduct():
 
 @productBP.route("/product/<int:id>")
 def detailProduct(id):
-    if "user_id" not in session:
-        return redirect(url_for("product.products"))
-
     product = productService.getProduct(id)
     return render_template("product/detail_product.html", product=product)
 

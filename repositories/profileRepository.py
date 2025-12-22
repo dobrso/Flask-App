@@ -43,3 +43,25 @@ class ProfileRepository:
                 connection.close()
 
             return Profile(*row)
+
+    def getProfileID(self, userID):
+        connection = self.database.getConnection()
+        if connection:
+            cursor = connection.cursor()
+            query = '''
+            SELECT id
+            FROM profiles
+            WHERE user_id = %s
+            '''
+
+            try:
+                cursor.execute(query, (userID,))
+                id = cursor.fetchone()
+                if not id:
+                    return None
+
+            finally:
+                cursor.close()
+                connection.close()
+
+            return id[0]
