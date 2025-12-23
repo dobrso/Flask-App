@@ -14,7 +14,8 @@ def products():
     userID = session.get("user_id")
     profileID = userService.getProfileID(userID)
     products = productService.getProducts()
-    return render_template("product/products.html", products=products, profileID=profileID)
+    favorites = productService.getUserFavorites(userID)
+    return render_template("product/products.html", products=products, profileID=profileID, userID=userID, favorites=favorites)
 
 @productBP.route("/product/add", methods=["GET", "POST"])
 def addProduct():
@@ -77,4 +78,27 @@ def deleteProduct(id):
 
     productService.deleteProduct(id)
 
+    return redirect(url_for("product.products"))
+
+@productBP.route("/favorites/<int:id>")
+def favorites(id):
+    products = productService.getUserFavoriteProducts(id)
+    return render_template("product/favorites.html", products=products)
+
+@productBP.route("/favorites/add/<int:id>")
+def addFavorite(id):
+    if "user_id" not in session:
+        return redirect(url_for("product.products"))
+
+    userID = session.get("user_id")
+    productService.addUserFavorite(userID, id)
+    return redirect(url_for("product.products"))
+
+@productBP.route("/favorites/delete/<int:id>")
+def deleteFavorite(id):
+    if "user_id" not in session:
+        return redirect(url_for("product.products"))
+
+    userID = session.get("user_id")
+    productService.deleteUserFavorite(userID, id)
     return redirect(url_for("product.products"))
