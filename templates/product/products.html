@@ -9,7 +9,7 @@
         <div class="d-flex justify-content-between align-items-center mb-4">
             <a href="{{ url_for('product.products') }}" class="a_title_btn"><h1 class="mb-0">SWAGA SHOP</h1></a>
             <div>
-                {% if session.user_id %}
+                {% if session.user_id and profileID %}
                     <div class="dropdown">
                         <button class="btn btn-primary dropdown-toggle" type="button"
                                 data-bs-toggle="dropdown" aria-expanded="false">Аккаунт</button>

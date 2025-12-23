@@ -39,8 +39,11 @@
                             <div class="mt-auto">
                                 <h4 class="text-primary">{{ product.price }} ₽</h4>
                             </div>
-                        </div>
 
+                            <div class="mt-auto">
+                                <a href="{{ url_for('user.profile', id=product.user_id) }}" class="btn btn-primary">Профиль владельца</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

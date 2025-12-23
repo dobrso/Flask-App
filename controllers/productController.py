@@ -12,7 +12,7 @@ userService = UserService()
 @productBP.route("/")
 def products():
     userID = session.get("user_id")
-    profileID = userService.getProfileID(userID)
+    profileID = userService.getProfileId(userID)
     products = productService.getProducts()
     favorites = productService.getUserFavorites(userID)
     return render_template("product/products.html", products=products, profileID=profileID, userID=userID, favorites=favorites)
@@ -39,8 +39,9 @@ def addProduct():
 
 @productBP.route("/product/<int:id>")
 def detailProduct(id):
+    userID = session.get("user_id")
     product = productService.getProduct(id)
-    return render_template("product/detail_product.html", product=product)
+    return render_template("product/detail_product.html", product=product, userID=userID)
 
 @productBP.route("/product/edit/<int:id>", methods=["GET", "POST"])
 def editProduct(id):

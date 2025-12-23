@@ -44,7 +44,7 @@ class ProfileRepository:
 
             return Profile(*row)
 
-    def getProfileID(self, userID):
+    def getProfileId(self, userID):
         connection = self.database.getConnection()
         if connection:
             cursor = connection.cursor()
@@ -65,3 +65,30 @@ class ProfileRepository:
                 connection.close()
 
             return id[0]
+
+    def update(self, userID, phoneNumber, bio, image=None):
+        connection = self.database.getConnection()
+        if connection:
+            cursor = connection.cursor()
+
+            try:
+                if image:
+                    query = '''
+                    UPDATE profiles
+                    SET phone_number = %s, bio = %s, image = %s
+                    WHERE user_id = %s
+                    '''
+                    cursor.execute(query, (phoneNumber, bio, image, userID))
+                    connection.commit()
+                else:
+                    query = '''
+                    UPDATE profiles
+                    SET phone_number = %s, bio = %s
+                    WHERE user_id = %s
+                    '''
+                    cursor.execute(query, (phoneNumber, bio, userID))
+                    connection.commit()
+
+            finally:
+                cursor.close()
+                connection.close()

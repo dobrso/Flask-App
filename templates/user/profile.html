@@ -1,7 +1,75 @@
 {% extends 'base.html' %}
 
 {% block title %}
+    Профиль {{ user.username }}
 {% endblock %}
 
 {% block content %}
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <nav class="navbar fixed-top">
+                <a href="{{ url_for('product.products') }}" class="a_title_btn navbar-brand">Swaga Shop</a>
+            </nav>
+
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="text-center">{{ user.username }}</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-img-top-container image">
+                            {% if profile.image %}
+                                <img src="{{ url_for('static', filename='uploads/' + profile.image) }}"
+                                     class="card-img-top h-100 w-100 object-fit-cover"
+                                     alt="{{ user.username }}">
+                            {% else %}
+                                <img src="{{ url_for('static', filename='default/avatar.png') }}"
+                                     class="card-img-top h-100 w-100 object-fit-cover"
+                                     alt="{{ user.username }}">
+                            {% endif %}
+                        </div>
+
+                        <div class="card-body d-flex flex-column">
+                            {% if userId and userId == profile.user_id %}
+                                <div>
+                                     <form method="post" enctype="multipart/form-data">
+                                        <div class="mb-3">
+                                            <label for="bio" class="form-label">Информация о пользователе</label>
+                                            <textarea class="form-control" id="bio" name="bio" required>{{ profile.bio }}</textarea>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="phoneNumber" class="form-label">Номер телефона</label>
+                                            <input type="text"
+                                                   class="form-control"
+                                                   id="phoneNumber"
+                                                   name="phoneNumber"
+                                                   value="{{ profile.phone_number }}"
+                                                   required>
+                                        </div>
+                                         <div class="mb-3">
+                                             <label for="image" class="form-label">Аватар</label>
+                                             <input type="file" class="form-control" id="image" name="image" accept="image/*">
+                                         </div>
+
+                                        <div class="d-grid gap-2">
+                                            <button type="submit" class="btn btn-primary">Сохранить</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            {% else %}
+                                <div class="mt-auto">
+                                    <h4 class="card-text">{{ profile.bio }}</h4>
+                                </div>
+
+                                <div class="mt-auto">
+                                    <p class="card-text">{{ profile.phone_number }}</p>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

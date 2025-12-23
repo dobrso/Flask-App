@@ -53,9 +53,20 @@ def logout():
 
     return redirect(url_for("product.products"))
 
-@userBP.route("/profile/<int:id>")
+@userBP.route("/profile/<int:id>", methods=["GET", "POST"])
 def profile(id):
-    if "user_id" not in session:
-        return redirect(url_for("product.products"))
+    userId = session.get("user_id")
+    profile = userService.getProfile(id)
+    user = userService.getUser(id)
 
-    return render_template("user/profile.html")
+    if request.method == "POST":
+        bio = request.form.get("bio").strip()
+        phoneNumber = request.form.get("phoneNumber").strip()
+
+        imageFile = None
+        if "image" in request.files:
+            imageFile = request.files.get("image")
+
+        userService.updateProfile(user.id, bio, phoneNumber, imageFile, profile.image)
+
+    return render_template("user/profile.html", profile=profile, user=user, userId=userId)
