@@ -3,8 +3,8 @@ import os
 from flask import Flask
 
 from config import Config
-from controllers.productController import productBP
-from controllers.userController import userBP
+from controllers.productController import productRoute
+from controllers.userController import userRoute
 from database.database import Database
 
 app = Flask(__name__)
@@ -14,11 +14,11 @@ app.config["MAX_CONTENT_LENGTH"] = Config.MAX_CONTENT_LENGTH
 
 os.makedirs(app.config["UPLOAD_FOLDER"], exist_ok=True)
 
-app.register_blueprint(userBP)
-app.register_blueprint(productBP)
+app.register_blueprint(userRoute)
+app.register_blueprint(productRoute)
 
 if __name__ == "__main__":
-    db = Database()
-    db.initDB()
+    database = Database()
+    database.initDB()
 
     app.run(debug=True)

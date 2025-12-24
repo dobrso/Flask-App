@@ -3,14 +3,14 @@ from werkzeug.utils import redirect
 
 from services.userService import UserService
 
-userBP = Blueprint("user", __name__)
+userRoute = Blueprint("user", __name__)
 
 userService = UserService()
 
-@userBP.route("/registration", methods=["GET", "POST"])
+@userRoute.route("/registration", methods=["GET", "POST"])
 def registration():
     if request.method == "POST":
-        username = request.form.get("username").strip()
+        name = request.form.get("name").strip()
         password = request.form.get("password").strip()
         confirmPassword = request.form.get("confirmPassword").strip()
 
@@ -18,10 +18,9 @@ def registration():
             flash("Пароли не совпадают", "danger")
             return render_template("user/registration.html")
 
-        status, message, userID = userService.register(username, password)
+        status, message, userId = userService.register(name, password)
         if status:
-            session["user_id"] = userID
-            flash(message, "success")
+            session["user_id"] = userId
             return redirect(url_for("product.products"))
 
         flash(message, "danger")
@@ -29,16 +28,15 @@ def registration():
 
     return render_template("user/registration.html")
 
-@userBP.route("/login", methods=["GET", "POST"])
+@userRoute.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        username = request.form.get("username").strip()
+        name = request.form.get("name").strip()
         password = request.form.get("password").strip()
 
-        status, message, userID = userService.login(username, password)
+        status, message, userId = userService.login(name, password)
         if status:
-            session["user_id"] = userID
-            flash(message, "success")
+            session["user_id"] = userId
             return redirect(url_for("product.products"))
 
         flash(message, "danger")
@@ -46,14 +44,14 @@ def login():
 
     return render_template("user/login.html")
 
-@userBP.route("/logout")
+@userRoute.route("/logout")
 def logout():
     if "user_id" in session:
         session.pop("user_id")
 
     return redirect(url_for("product.products"))
 
-@userBP.route("/profile/<int:id>", methods=["GET", "POST"])
+@userRoute.route("/profile/<int:id>", methods=["GET", "POST"])
 def profile(id):
     userId = session.get("user_id")
     profile = userService.getProfile(id)
@@ -68,5 +66,6 @@ def profile(id):
             imageFile = request.files.get("image")
 
         userService.updateProfile(user.id, bio, phoneNumber, imageFile, profile.image)
+        return render_template("user/profile.html", profile=profile, user=user, userId=userId)
 
     return render_template("user/profile.html", profile=profile, user=user, userId=userId)

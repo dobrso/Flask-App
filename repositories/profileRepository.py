@@ -6,34 +6,34 @@ class ProfileRepository:
     def __init__(self):
         self.database = Database()
 
-    def create(self, userID):
+    def create(self, userId):
         connection = self.database.getConnection()
         if connection:
             cursor = connection.cursor()
-            query = '''
+            query = """
             INSERT INTO profiles (user_id)
             VALUES (%s)
-            '''
+            """
 
             try:
-                cursor.execute(query, (userID,))
+                cursor.execute(query, (userId,))
                 connection.commit()
 
             finally:
                 cursor.close()
                 connection.close()
 
-    def getProfile(self, userID):
+    def get(self, userId):
         connection = self.database.getConnection()
         if connection:
             cursor = connection.cursor()
-            query = '''
+            query = """
             SELECT * FROM profiles
             WHERE user_id = %s
-            '''
+            """
 
             try:
-                cursor.execute(query, (userID,))
+                cursor.execute(query, (userId,))
                 row = cursor.fetchone()
                 if not row:
                     return None
@@ -44,18 +44,18 @@ class ProfileRepository:
 
             return Profile(*row)
 
-    def getProfileId(self, userID):
+    def getId(self, userId):
         connection = self.database.getConnection()
         if connection:
             cursor = connection.cursor()
-            query = '''
+            query = """
             SELECT id
             FROM profiles
             WHERE user_id = %s
-            '''
+            """
 
             try:
-                cursor.execute(query, (userID,))
+                cursor.execute(query, (userId,))
                 id = cursor.fetchone()
                 if not id:
                     return None
@@ -66,28 +66,31 @@ class ProfileRepository:
 
             return id[0]
 
-    def update(self, userID, phoneNumber, bio, image=None):
+    def update(self, userId, bio, phoneNumber, image=None):
         connection = self.database.getConnection()
         if connection:
             cursor = connection.cursor()
 
             try:
                 if image:
-                    query = '''
+                    query = """
                     UPDATE profiles
-                    SET phone_number = %s, bio = %s, image = %s
+                    SET bio = %s, phone_number = %s, image = %s
                     WHERE user_id = %s
-                    '''
-                    cursor.execute(query, (phoneNumber, bio, image, userID))
-                    connection.commit()
+                    """
+
+                    cursor.execute(query, (bio, phoneNumber, image, userId))
+
                 else:
-                    query = '''
+                    query = """
                     UPDATE profiles
-                    SET phone_number = %s, bio = %s
+                    SET bio = %s, phone_number = %s
                     WHERE user_id = %s
-                    '''
-                    cursor.execute(query, (phoneNumber, bio, userID))
-                    connection.commit()
+                    """
+
+                    cursor.execute(query, (bio, phoneNumber, userId))
+
+                connection.commit()
 
             finally:
                 cursor.close()

@@ -18,16 +18,19 @@ class Database:
 
     def initDB(self):
         connection = self.getConnection()
+        if connection:
+            currentDir = os.path.dirname(os.path.abspath(__file__))
+            initFile = os.path.join(currentDir, 'initDB.sql')
 
-        currentDir = os.path.dirname(os.path.abspath(__file__))
-        initFile = os.path.join(currentDir, 'initDB.sql')
+            with open(initFile, "r", encoding="utf-8") as file:
+                query = file.read()
 
-        with open(initFile, "r", encoding="utf-8") as file:
-            query = file.read()
+            cursor = connection.cursor()
 
-        cursor = connection.cursor()
-        cursor.execute(query)
-        connection.commit()
+            try:
+                cursor.execute(query)
+                connection.commit()
 
-        cursor.close()
-        connection.close()
+            finally:
+                cursor.close()
+                connection.close()

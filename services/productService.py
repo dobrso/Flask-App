@@ -16,18 +16,18 @@ class ProductService:
         products = self.productRepository.getAll()
         return products
 
-    def getProduct(self, id):
-        product = self.productRepository.getById(id)
+    def getProduct(self, productId):
+        product = self.productRepository.get(productId)
         return product
 
-    def addProduct(self, title, description, price, userID, imageFile):
+    def addProduct(self, title, description, price, userId, imageFile):
         image = None
         if imageFile and imageFile.filename != "":
             image = FileHandler.saveFile(imageFile)
 
-        self.productRepository.create(title, description, price, userID, image)
+        self.productRepository.create(title, description, price, userId, image)
 
-    def updateProduct(self, id, title, description, price, imageFile, oldImage):
+    def updateProduct(self, productId, title, description, price, imageFile, oldImage):
         image = oldImage
         if imageFile.filename != "":
             if oldImage:
@@ -36,38 +36,38 @@ class ProductService:
                     os.remove(oldImagePath)
 
             image = FileHandler.saveFile(imageFile)
-        self.productRepository.updateById(id, title, description, price, image)
+        self.productRepository.update(productId, title, description, price, image)
 
-    def deleteProduct(self, id):
-        image = self.productRepository.getProductImage(id)
+    def deleteProduct(self, productId):
+        image = self.productRepository.getImage(productId)
         if image:
             imagePath = os.path.join(current_app.config["UPLOAD_FOLDER"], image)
             if os.path.exists(imagePath):
                 os.remove(imagePath)
 
-        self.productRepository.deleteById(id)
+        self.productRepository.delete(productId)
 
-    def getProductOwner(self, id):
-        userID = self.productRepository.getProductOwner(id)
-        return userID
+    def getProductOwner(self, productId):
+        userId = self.productRepository.getOwner(productId)
+        return userId
 
-    def addUserFavorite(self, userID, productID):
-        self.favoritesRepository.add(userID, productID)
+    def addUserFavorite(self, userId, productId):
+        self.favoritesRepository.add(userId, productId)
 
-    def deleteUserFavorite(self, userID, productID):
-        self.favoritesRepository.delete(userID, productID)
+    def deleteUserFavorite(self, userId, productId):
+        self.favoritesRepository.delete(userId, productId)
 
-    def getUserFavorites(self, userID):
-        favorites = self.favoritesRepository.getAll(userID)
+    def getUserFavorites(self, userId):
+        favorites = self.favoritesRepository.getAll(userId)
         return favorites
 
-    def getUserFavoriteProducts(self, userID):
-        favorites = self.favoritesRepository.getAll(userID)
+    def getUserFavoriteProducts(self, userId):
+        favorites = self.favoritesRepository.getAll(userId)
         if not favorites:
             return None
 
         products = []
         for favorite in favorites:
-            product = self.productRepository.getById(favorite)
+            product = self.productRepository.get(favorite)
             products.append(product)
         return products

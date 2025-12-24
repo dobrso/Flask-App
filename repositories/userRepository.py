@@ -6,35 +6,35 @@ class UserRepository:
     def __init__(self):
         self.database = Database()
 
-    def create(self, username, hashedPassword):
+    def create(self, name, passwordHash):
         connection = self.database.getConnection()
         if connection:
             cursor = connection.cursor()
-            query = '''
-                INSERT INTO users (username, password_hash)
+            query = """
+                INSERT INTO users (name, password_hash)
                 VALUES (%s, %s)
                 RETURNING id
-            '''
+            """
 
             try:
-                cursor.execute(query, (username, hashedPassword))
-                id = cursor.fetchone()[0]
+                cursor.execute(query, (name, passwordHash))
+                id = cursor.fetchone()
                 connection.commit()
 
             finally:
                 cursor.close()
                 connection.close()
 
-            return self.getById(id)
+            return self.getById(id[0])
 
     def getById(self, id):
         connection = self.database.getConnection()
         if connection:
             cursor = connection.cursor()
-            query = '''
+            query = """
                 SELECT * FROM users
                 WHERE id = %s
-            '''
+            """
 
             try:
                 cursor.execute(query, (id,))
@@ -42,30 +42,26 @@ class UserRepository:
                 if not row:
                     return None
 
-                connection.commit()
-
             finally:
                 cursor.close()
                 connection.close()
 
             return User(*row)
 
-    def getByUsername(self, username):
+    def getByName(self, name):
         connection = self.database.getConnection()
         if connection:
             cursor = connection.cursor()
-            query = '''
+            query = """
             SELECT * FROM users
-            WHERE username = %s
-            '''
+            WHERE name = %s
+            """
 
             try:
-                cursor.execute(query, (username,))
+                cursor.execute(query, (name,))
                 row = cursor.fetchone()
                 if not row:
                     return None
-
-                connection.commit()
 
             finally:
                 cursor.close()

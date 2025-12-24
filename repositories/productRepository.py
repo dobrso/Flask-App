@@ -6,17 +6,17 @@ class ProductRepository:
     def __init__(self):
         self.database = Database()
 
-    def create(self, name, description, price, user_id, image=None):
+    def create(self, title, description, price, user_id, image=None):
         connection = self.database.getConnection()
         if connection:
             cursor = connection.cursor()
-            query = '''
-            INSERT INTO products (name, description, price, user_id, image)
+            query = """
+            INSERT INTO products (title, description, price, user_id, image)
             VALUES (%s, %s, %s, %s, %s)
-            '''
+            """
 
             try:
-                cursor.execute(query, (name, description, price, user_id, image))
+                cursor.execute(query, (title, description, price, user_id, image))
                 connection.commit()
 
             finally:
@@ -27,9 +27,9 @@ class ProductRepository:
         connection = self.database.getConnection()
         if connection:
             cursor = connection.cursor()
-            query = '''
+            query = """
             SELECT * FROM products
-            '''
+            """
 
             try:
                 cursor.execute(query)
@@ -44,14 +44,14 @@ class ProductRepository:
             products = [Product(*row) for row in rows]
             return products
 
-    def getById(self, id):
+    def get(self, id):
         connection = self.database.getConnection()
         if connection:
             cursor = connection.cursor()
-            query = '''
+            query = """
             SELECT * FROM products
             WHERE id = %s
-            '''
+            """
 
             try:
                 cursor.execute(query, (id,))
@@ -65,27 +65,29 @@ class ProductRepository:
 
             return Product(*row)
 
-    def updateById(self, id, name, description, price, image=None):
+    def update(self, id, title, description, price, image=None):
         connection = self.database.getConnection()
         if connection:
             cursor = connection.cursor()
 
             try:
                 if image:
-                    query = '''
+                    query = """
                     UPDATE products
-                    SET name = %s, description = %s, price = %s, image = %s
+                    SET title = %s, description = %s, price = %s, image = %s
                     WHERE id = %s
-                    '''
-                    cursor.execute(query, (name, description, price, image, id))
+                    """
+
+                    cursor.execute(query, (title, description, price, image, id))
 
                 else:
-                    query = '''
+                    query = """
                     UPDATE products
-                    SET name = %s, description = %s, price = %s
+                    SET title = %s, description = %s, price = %s
                     WHERE id = %s
-                    '''
-                    cursor.execute(query, (name, description, price, id))
+                    """
+
+                    cursor.execute(query, (title, description, price, id))
 
                 connection.commit()
 
@@ -93,14 +95,14 @@ class ProductRepository:
                 cursor.close()
                 connection.close()
 
-    def deleteById(self, id):
+    def delete(self, id):
         connection = self.database.getConnection()
         if connection:
             cursor = connection.cursor()
-            query = '''
+            query = """
             DELETE FROM products
             WHERE id = %s
-            '''
+            """
 
             try:
                 cursor.execute(query, (id,))
@@ -110,37 +112,37 @@ class ProductRepository:
                 cursor.close()
                 connection.close()
 
-    def getProductOwner(self, id):
+    def getOwner(self, id):
         connection = self.database.getConnection()
         if connection:
             cursor = connection.cursor()
-            query = '''
+            query = """
             SELECT user_id
             FROM products
             WHERE id = %s
-            '''
+            """
 
             try:
                 cursor.execute(query, (id,))
-                userID = cursor.fetchone()[0]
-                if not userID:
+                userId = cursor.fetchone()[0]
+                if not userId:
                     return None
 
             finally:
                 cursor.close()
                 connection.close()
 
-            return userID
+            return userId
 
-    def getProductImage(self, id):
+    def getImage(self, id):
         connection = self.database.getConnection()
         if connection:
             cursor = connection.cursor()
-            query = '''
+            query = """
             SELECT image
             FROM products
             WHERE id = %s
-            '''
+            """
 
             try:
                 cursor.execute(query, (id,))

@@ -1,13 +1,13 @@
 CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
-    username VARCHAR(100) NOT NULL,
+    name VARCHAR(100) NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS products (
     id SERIAL PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
+    title VARCHAR(100) NOT NULL,
     description TEXT NOT NULL,
     price INTEGER NOT NULL,
     user_id INTEGER NOT NULL,
@@ -18,8 +18,8 @@ CREATE TABLE IF NOT EXISTS products (
 
 CREATE TABLE IF NOT EXISTS profiles (
     id SERIAL PRIMARY KEY,
-    phone_number VARCHAR(100) NOT NULL DEFAULT '',
     bio TEXT NOT NULL DEFAULT '',
+    phone_number VARCHAR(100) NOT NULL DEFAULT '',
     user_id INTEGER UNIQUE NOT NULL,
     image VARCHAR(255),
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE

@@ -5,7 +5,7 @@ class FavoritesRepository:
     def __init__(self):
         self.database = Database()
 
-    def add(self, userID, productID):
+    def add(self, userId, productId):
         connection = self.database.getConnection()
         if connection:
             cursor = connection.cursor()
@@ -15,14 +15,14 @@ class FavoritesRepository:
             """
 
             try:
-                cursor.execute(query, (userID, productID))
+                cursor.execute(query, (userId, productId))
                 connection.commit()
 
             finally:
                 cursor.close()
                 connection.close()
 
-    def delete(self, userID, productID):
+    def delete(self, userId, productId):
         connection = self.database.getConnection()
         if connection:
             cursor = connection.cursor()
@@ -32,32 +32,32 @@ class FavoritesRepository:
             """
 
             try:
-                cursor.execute(query, (userID, productID))
+                cursor.execute(query, (userId, productId))
                 connection.commit()
 
             finally:
                 cursor.close()
                 connection.close()
 
-    def getAll(self, userID):
+    def getAll(self, userId):
         connection = self.database.getConnection()
         if connection:
             cursor = connection.cursor()
-            query = '''
+            query = """
             SELECT product_id
             FROM favorites
             WHERE user_id = %s
-            '''
+            """
 
             try:
-                cursor.execute(query, (userID,))
-                result = cursor.fetchall()
-                if not result:
+                cursor.execute(query, (userId,))
+                rows = cursor.fetchall()
+                if not rows:
                     return None
 
             finally:
                 cursor.close()
                 connection.close()
 
-            favorites = [item[0] for item in result]
+            favorites = [row[0] for row in rows]
             return favorites
