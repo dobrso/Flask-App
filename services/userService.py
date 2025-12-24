@@ -1,13 +1,11 @@
 import os
-import time
 
 from flask import current_app
 from werkzeug.security import generate_password_hash, check_password_hash
-from werkzeug.utils import secure_filename
 
-from config import Config
 from repositories.profileRepository import ProfileRepository
 from repositories.userRepository import UserRepository
+from utilities.fileHandler import FileHandler
 
 
 class UserService:
@@ -54,7 +52,7 @@ class UserService:
                 if os.path.exists(oldImagePath):
                     os.remove(oldImagePath)
 
-            image = UserService.saveFile(imageFile)
+            image = FileHandler.saveFile(imageFile)
         self.profileRepository.update(id, bio, phoneNumber, image)
 
     @staticmethod
@@ -64,21 +62,3 @@ class UserService:
     @staticmethod
     def validateUsername(username):
         pass
-
-    @staticmethod
-    def isFileAllowed(filename):
-        return '.' in filename and filename.rsplit('.', 1)[1].lower() in Config.ALLOWED_EXTENSIONS
-
-    @staticmethod
-    def saveFile(file):
-        if file and UserService.isFileAllowed(file.filename):
-            filename = secure_filename(file.filename)
-
-            name, extension = os.path.splitext(filename)
-            newFilename = f"{name}_{int(time.time())}{extension}"
-
-            uploadFolder = current_app.config['UPLOAD_FOLDER']
-            filePath = os.path.join(uploadFolder, newFilename)
-            file.save(filePath)
-            return newFilename
-        return None

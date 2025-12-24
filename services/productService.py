@@ -1,12 +1,10 @@
 import os
-import time
 
 from flask import current_app
-from werkzeug.utils import secure_filename
 
-from config import Config
 from repositories.favoritesRepository import FavoritesRepository
 from repositories.productRepository import ProductRepository
+from utilities.fileHandler import FileHandler
 
 
 class ProductService:
@@ -25,7 +23,7 @@ class ProductService:
     def addProduct(self, title, description, price, userID, imageFile):
         image = None
         if imageFile and imageFile.filename != "":
-            image = ProductService.saveFile(imageFile)
+            image = FileHandler.saveFile(imageFile)
 
         self.productRepository.create(title, description, price, userID, image)
 
@@ -37,7 +35,7 @@ class ProductService:
                 if os.path.exists(oldImagePath):
                     os.remove(oldImagePath)
 
-            image = ProductService.saveFile(imageFile)
+            image = FileHandler.saveFile(imageFile)
         self.productRepository.updateById(id, title, description, price, image)
 
     def deleteProduct(self, id):
@@ -73,21 +71,3 @@ class ProductService:
             product = self.productRepository.getById(favorite)
             products.append(product)
         return products
-
-    @staticmethod
-    def isFileAllowed(filename):
-        return '.' in filename and filename.rsplit('.', 1)[1].lower() in Config.ALLOWED_EXTENSIONS
-
-    @staticmethod
-    def saveFile(file):
-        if file and ProductService.isFileAllowed(file.filename):
-            filename = secure_filename(file.filename)
-
-            name, extension = os.path.splitext(filename)
-            newFilename = f"{name}_{int(time.time())}{extension}"
-
-            uploadFolder = current_app.config['UPLOAD_FOLDER']
-            filePath = os.path.join(uploadFolder, newFilename)
-            file.save(filePath)
-            return newFilename
-        return None

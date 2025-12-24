@@ -14,5 +14,3 @@ class Config:
     UPLOAD_FOLDER = "static/uploads"
     ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif"}
     MAX_CONTENT_LENGTH = 16 * 1024 * 1024 # 16MB
-    SCREAMER_CHANCE = 0.1
-    SCREAMER_COOLDOWN = 60
