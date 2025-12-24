@@ -59,10 +59,12 @@
                                 </div>
                             {% else %}
                                 <div class="mt-auto">
-                                    <h4 class="card-text">{{ profile.bio }}</h4>
+                                    <h4 class="card-text">О пользователе</h4>
+                                    <h5 class="card-text">{{ profile.bio }}</h5>
                                 </div>
-
+                                <hr>
                                 <div class="mt-auto">
+                                    <h4 class="card-text">Номер телефона</h4>
                                     <p class="card-text">{{ profile.phone_number }}</p>
                                 </div>
                             {% endif %}

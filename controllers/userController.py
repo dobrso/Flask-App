@@ -66,6 +66,7 @@ def profile(id):
             imageFile = request.files.get("image")
 
         userService.updateProfile(user.id, bio, phoneNumber, imageFile, profile.image)
+        profile = userService.getProfile(id)
         return render_template("user/profile.html", profile=profile, user=user, userId=userId)
 
     return render_template("user/profile.html", profile=profile, user=user, userId=userId)

@@ -83,6 +83,10 @@ def deleteProduct(id):
 
 @productRoute.route("/favorites/<int:id>")
 def favorites(id):
+    userId = session.get("user_id")
+    if userId != id:
+        return redirect(url_for("product.products"))
+
     products = productService.getUserFavoriteProducts(id)
     return render_template("product/favorites.html", products=products)
 
